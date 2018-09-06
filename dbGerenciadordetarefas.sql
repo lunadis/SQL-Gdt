@@ -61,26 +61,27 @@ insert into tb_Metodologia(dsNome) values ('Feyman')
 
 insert into tb_Tarefas(dsTitulo,dsDescricao,dtPrazoEst,dtInicio,dtFim,id_metodologia) 
 	values ('Tela de cadsatro','Construir tela de cadastro','2018-08-8','2018-08-01',
-			'2018-08-8',0)
+			'2018-08-03',0)
 insert into tb_Tarefas(dsTitulo,dsDescricao,dtPrazoEst,dtInicio,dtFim,id_metodologia) 
 	values ('Tela de login','Construir tela de login','2018-08-8','2018-08-01',
-			'2018-08-8',1)
+			'2018-08-03',1)
 insert into tb_Tarefas(dsTitulo,dsDescricao,dtPrazoEst,dtInicio,dtFim,id_metodologia) 
 	values ('Tela de home','Construir tela home','2018-08-8','2018-08-01',
-			'2018-08-08',1)
+			'2018-08-03',1)
 insert into tb_Tarefas(dsTitulo,dsDescricao,dtPrazoEst,dtInicio,dtFim,id_metodologia) 
 	values ('Tela de splash','Construir tela de splash','2018-08-8','2018-08-01',
-			'2018-08-08',2)
+			'2018-08-03',2)
 insert into tb_Tarefas(dsTitulo,dsDescricao,dtPrazoEst,dtInicio,dtFim,id_metodologia) 
 	values ('Tela de influencia','Construir tela de influencia','2018-08-8','2018-08-01',
-			'2018-08-15',0)			
+			'2018-08-9',1)			
 
 insert into relTarefaPessoa(id_pessoa,id_tarefa) values (0,4)
 insert into relTarefaPessoa(id_pessoa,id_tarefa) values (1,3)
 insert into relTarefaPessoa(id_pessoa,id_tarefa) values (2,2)
 insert into relTarefaPessoa(id_pessoa,id_tarefa) values (3,1)
 insert into relTarefaPessoa(id_pessoa,id_tarefa) values (4,0)
-insert into relTarefaPessoa(id_pessoa,id_tarefa) values (5,4)
+insert into relTarefaPessoa(id_pessoa,id_tarefa) values (1,4)
+insert into relTarefaPessoa(id_pessoa,id_tarefa) values (2,4)
 
 			
 /*select * from tb_Pessoas
@@ -91,29 +92,24 @@ select * from tb_Tarefas
 
 select * from relTarefaPessoa*/
 
+
 --Ex 1
-
 select p.id_pessoa, p.dsNome, t.id_tarefa from tb_pessoas as p
-left join tb_tarefas as t on p.id_pessoa=t.id_tarefa where id_tarefa is null
-
+left join tb_tarefas as t on p.id_pessoa=t.id_tarefa where id_tarefa is null;
 
 --Ex 2
-
-select count (dsNome) as Qtd, dsNome from tb_metodologia group by dsNome order by count(dsNome) desc;
+select count (t.id_metodologia) as Qtd, m.dsNome, t.id_metodologia  from tb_Tarefas as t 
+inner join tb_Metodologia as m on m.id_metodologia = t.id_metodologia group by t.id_metodologia, m.dsNome order by count (t.id_metodologia) DESC;
 
 --Ex 3 
-
 --mulheres
-select count(1) as Mulheres from tb_tarefas as b left join tb_pessoas as a on b.id_tarefa = a.id_pessoa where dsSexo = 'F';
+select   count(DISTINCT r.id_pessoa) as mulheres from relTarefaPessoa as r inner join tb_Pessoas as p on p.id_pessoa = r.id_pessoa where p.dsSexo = 'f';
 
 --Homem
-select COUNT(1) as Homens from tb_Tarefas as b left join tb_Pessoas as a on b.id_tarefa = a.id_pessoa where dsSexo = 'm';
+select   count(DISTINCT r.id_pessoa) as Homens from relTarefaPessoa as r inner join tb_Pessoas as p on p.id_pessoa = r.id_pessoa where p.dsSexo = 'm';
+
 
 --Ex 4
---select p.dsNome, t.dtPrazoEst, t.dtFim from tb_Pessoas as p join relTarefaPessoa as r on p.id_pessoa = r.id_pessoa
---join tb_Tarefas as t on r.id_tarefa = t.id_tarefa where t.dtPrazoEst > t.dtFim;
-
-select p.dsNome, t.dtPrazoEst, t.dtFim from tb_Pessoas as p 
-INNER JOIN relTarefaPessoa as r on r.id_pessoa = p.id_pessoa
-INNER JOIN tb_Tarefas as t on r.id_tarefa = t.id_tarefa where t.dtPrazoEst < t.dtFim; 
-
+select p.dsNome, t.dtPrazoEst, t.dtFim from tb_Pessoas as p
+inner join relTarefaPessoa as r on p.id_pessoa = r.id_pessoa 
+inner join tb_Tarefas as t on r.id_tarefa = t.id_tarefa where t.dtFim > t.dtPrazoEst;
